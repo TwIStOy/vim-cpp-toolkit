@@ -89,6 +89,17 @@ def source_folders():
   return custom
 
 
+def header_extensions():
+  custom = vim_option('cpp_toolkit_header_extension', [])
+  assert custom is not None
+  assert isinstance(custom, list)
+  builtin = [
+    'h', 'hpp', 'hh', 'hxx'
+  ]
+  custom.extend(builtin)
+  return list(set(custom))
+
+
 def full_split_path(p: str) -> List[str]:
   first = os.path.normpath(p)
   res = []

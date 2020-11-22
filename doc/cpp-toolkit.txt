@@ -87,8 +87,12 @@ g:cpp_toolkit_source_folders                   *g:cpp_toolkit_source_folders*
     Default value is ['src', 'source', 'srcs', 'sources'].
 
 g:cpp_toolkit_clang_library                    *g:cpp_toolkit_clang_library*
-    String. llvm and clang library to find libclang dynamic library and headers.
+    String. LLVM and clang library to find libclang dynamic library and headers.
     No default value. You must specify it.
+
+g:cpp_toolkit_header_extension                 *g:cpp_toolkit_header_extension*
+    List. C/C++ header file extensions.
+    Default value is ['h', 'hpp', 'hh', 'hxx'].
 
 ===============================================================================
 

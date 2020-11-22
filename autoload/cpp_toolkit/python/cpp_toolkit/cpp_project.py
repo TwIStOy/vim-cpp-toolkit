@@ -1,6 +1,9 @@
 import os
 import os.path
 from typing import List
+import subprocess
+from .utils import *
+import itertools
 
 
 def is_project_root(p: str, custom_markers: List[str]) -> bool:
@@ -25,3 +28,25 @@ def project_root(p: str, custom_markers: List[str]) -> str:
       return current
     current = os.path.split(current)[0]
   return p
+
+
+def filter_header_files(root: str):
+  # load '.include_hints' from root
+  directories = [root]
+  if os.path.exists(os.path.join(root, '.include_hints')):
+    with open(os.path.join(root, '.include_hints'), 'r') as fp:
+      for line in fp.readlines():
+        directories.append(os.path.join(root, line.strip()))
+
+  directories = list(set([os.path.normpath(p) for p in directories]))
+  res = []
+  for directory in directories:
+    ext_args = [['-e', header] for header in header_extensions()]
+    ext_args = list(itertools.chain(*ext_args))
+    result = subprocess.run(
+      ['fd', '-LI'] + ext_args + ['--base-directory', directory],
+      stdout=subprocess.PIPE,
+      encoding='utf-8'
+    )
+    res.extend([x.strip() for x in result.stdout.split('\n') if x.strip()])
+  return list(set(res))
