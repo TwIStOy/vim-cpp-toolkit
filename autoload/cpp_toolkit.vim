@@ -1,4 +1,6 @@
-let g:cpp_toolkit_py = 'py3 '
+let g:cpp_toolkit_py = get(g:, 'cpp_toolkit_py', 'py3')
+let g:cpp_toolkit_pyeval = get(g: , 'cpp_toolkit_pyeval','py3eval')
+let g:cpp_toolkit_clang_library = '/Users/hawtianwang/Projects/clang+llvm-11.0.0-x86_64-apple-darwin'
 
 " prepare python environment, add current path into sys.path
 exec g:cpp_toolkit_py "import vim, sys, os, re, os.path"
@@ -8,10 +10,8 @@ exec g:cpp_toolkit_py "import cpp_toolkit.signature.clang as cl"
 
 function! cpp_toolkit#corresponding_file()
   exec g:cpp_toolkit_py "import cpp_toolkit.switch as switch"
-  exec g:cpp_toolkit_py "print(switch.corresponding_file())"
+  return call(g:cpp_toolkit_pyeval, ["switch.corresponding_file()"])
 endfunction
-
-let g:cpp_toolkit_clang_library = '/Users/hawtianwang/Projects/clang+llvm-11.0.0-x86_64-apple-darwin'
 
 function! cpp_toolkit#mark_current_function_decl()
   if &modified

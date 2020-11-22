@@ -51,7 +51,7 @@ def ext_associated():
   builtin = {
     '.c': ['.h', '.hh', '.hpp', '.hxx'],
     '.cpp': ['.hpp', '.hxx', '.hh', '.h'],
-    '.cc': ['.hh', 'hxx', '.hpp', '.h'],
+    '.cc': ['.hh', '.hxx', '.hpp', '.h'],
     '.cxx': ['.hxx', '.hpp', '.hh', '.h'],
     '.h': ['.c', '.cxx', '.cpp', '.cc'],
     '.hh': ['.cc', '.cxx', '.cpp', '.c'],
