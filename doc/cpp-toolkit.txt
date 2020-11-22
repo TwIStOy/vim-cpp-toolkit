@@ -44,7 +44,9 @@ cpp_toolkit#corresponding_file()
 
                                   *cpp_toolkit#mark_current_function_decl()*
 cpp_toolkit#mark_current_function_decl()
-    Mark function under cursor.
+    Mark function under cursor. This function must be called when current
+    buffer is not modified. You must save current buffer before you call this
+    function.
 
                                   *cpp_toolkit#generate_function_define_here()*
 cpp_toolkit#generate_function_define_here()
