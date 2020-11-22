@@ -145,6 +145,8 @@ class FunctionInfo(object):
     cindex.CursorKind.CXX_METHOD,
     cindex.CursorKind.FUNCTION_TEMPLATE,
     cindex.CursorKind.FUNCTION_DECL,
+    cindex.CursorKind.DESTRUCTOR,
+    cindex.CursorKind.CONSTRUCTOR,
   ]
 
   def __init__(self, cursor: cindex.Cursor):

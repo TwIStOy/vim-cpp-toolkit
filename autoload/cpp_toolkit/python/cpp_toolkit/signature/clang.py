@@ -121,11 +121,6 @@ def node_under_cursor() -> cindex.Cursor:
   ))
 
 
-_method_kind = [
-  cindex.CursorKind.CXX_METHOD,
-  cindex.CursorKind.FUNCTION_TEMPLATE
-]
-
 _current_marked_function = None
 
 
@@ -134,7 +129,8 @@ def mark_current_function():
   kind: cindex.CursorKind = cursor.kind
 
   if kind not in FunctionInfo._all_func_kinds:
-    print('Current position is not a function decl!')
+    print('Current position is not a function decl! It\'s', kind)
+    return
 
   global _current_marked_function
   _current_marked_function = FunctionInfo(cursor)
@@ -159,4 +155,7 @@ def generate_here():
     ns = current_namespace()
     print("Generate function define in ns:", ns)
     buf = _current_marked_function.stringify(ns)
-    vim.current.buffer.append(buf, current_line())
+    line_count = len(buf)
+    cur = current_line()
+    vim.current.buffer.append(buf, cur)
+    vim.command(f'call cursor({cur + line_count - 2}, 0)')
