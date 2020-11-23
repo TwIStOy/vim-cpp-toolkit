@@ -3,6 +3,7 @@ import vim
 import logging
 import os.path
 import os
+import sys
 from .struct import *
 from .skeleton import *
 
@@ -15,8 +16,13 @@ class ClangIndexer(object):
     self.clang_lib = vim_option('cpp_toolkit_clang_library', None)
     if self.clang_lib is None:
       print('You must setup clang!')
-    cindex.Config.set_library_file(
-      os.path.join(self.clang_lib, 'lib', 'libclang.dylib'))
+    if sys.platform == 'darwin':
+      cindex.Config.set_library_file(
+        os.path.join(self.clang_lib, 'lib', 'libclang.dylib'))
+    else:
+      cindex.Config.set_library_file(
+        os.path.join(self.clang_lib, 'lib', 'libclang.so'))
+
     self.compile_database = cindex.CompilationDatabase.fromDirectory(root)
     self.indexer = cindex.Index.create()
 
@@ -45,9 +51,10 @@ class ClangIndexer(object):
         last = ''
         for arg in cmds.arguments:
           assert isinstance(arg, str)
-          if skip and (len(arg) == 0 or arg[0] != '-'):
+          if skip:
             skip = 0
-            continue
+            if len(arg) == 0 or arg[0] != '-':
+              continue
           if arg == '-o' or arg == '-c':
             skip = 1
             continue
@@ -57,12 +64,12 @@ class ClangIndexer(object):
             if not os.path.isabs(include_path):
               include_path = os.path.normpath(os.path.join(cwd, include_path))
             res.append(f'-I{include_path}')
-          if arg != '-isystem' and arg.startswith('-isystem'):
+          elif arg != '-isystem' and arg.startswith('-isystem'):
             include_path = arg[8:]
             if not os.path.isabs(include_path):
               include_path = os.path.normpath(os.path.join(cwd, include_path))
             res.append(f'-isystem{include_path}')
-          if _basename in arg:
+          elif _basename in arg:
             continue
           else:
             # if last added switch was standalone include then we need to append
@@ -140,7 +147,8 @@ def current_namespace():
   cursor = node_under_cursor()
 
   res = []
-  while cursor.kind != cindex.CursorKind.TRANSLATION_UNIT:
+  while (cursor is not None and
+         cursor.kind != cindex.CursorKind.TRANSLATION_UNIT):
     if cursor.kind == cindex.CursorKind.NAMESPACE:
       res.append(cursor.spelling)
     cursor = cursor.semantic_parent
@@ -158,4 +166,4 @@ def generate_here():
     line_count = len(buf)
     cur = current_line()
     vim.current.buffer.append(buf, cur)
-    vim.command(f'call cursor({cur + line_count - 2}, 0)')
+    vim.command(f'call cursor({cur + line_count - 1}, 0)')

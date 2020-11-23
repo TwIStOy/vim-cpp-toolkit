@@ -1,6 +1,5 @@
 let g:cpp_toolkit_py = get(g:, 'cpp_toolkit_py', 'py3')
 let g:cpp_toolkit_pyeval = get(g: , 'cpp_toolkit_pyeval','py3eval')
-let g:cpp_toolkit_clang_library = '/Users/hawtianwang/Projects/clang+llvm-11.0.0-x86_64-apple-darwin'
 
 " prepare python environment, add current path into sys.path
 exec g:cpp_toolkit_py "import vim, sys, os, re, os.path"

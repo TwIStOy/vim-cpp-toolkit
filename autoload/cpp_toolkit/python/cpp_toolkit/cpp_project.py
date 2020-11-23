@@ -8,12 +8,13 @@ import itertools
 
 def is_project_root(p: str, custom_markers: List[str]) -> bool:
   search_in_order = [os.path.join(p, marker) for marker in custom_markers]
-  # include hint for leaderf-cppinclude
-  search_in_order.append(os.path.join(p, '.include_hints'))
-  # cmake project
-  search_in_order.append(os.path.join(p, 'CMakeLists.txt'))
-  # git repo
-  search_in_order.append(os.path.join(p, '.git'))
+  if not search_in_order:
+    # include hint for leaderf-cppinclude
+    search_in_order.append(os.path.join(p, '.include_hints'))
+    # cmake project
+    search_in_order.append(os.path.join(p, 'CMakeLists.txt'))
+    # git repo
+    search_in_order.append(os.path.join(p, '.git'))
 
   for patten in search_in_order:
     if os.path.exists(patten):

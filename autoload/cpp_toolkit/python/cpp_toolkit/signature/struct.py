@@ -34,9 +34,10 @@ class TypeInfo(object):
     elif cursor.kind == cindex.CursorKind.TRANSLATION_UNIT:
       return []
     else:
-      return TypeInfo._full_qualified_name(cursor.semantic_parent) + [
+      tmp = TypeInfo._full_qualified_name(cursor.semantic_parent) + [
         cursor.spelling
       ]
+      return [x for x in tmp if x]
 
   def stringify(self, ns: List[str]) -> str:
     if self.full_qualified_name:
@@ -131,7 +132,7 @@ class ClassInfo(object):
         res = "::" + '::'.join(name[:-1])
       else:
         res = "::".join(name[:-1])
-    res += "::" if res else '' + self.cursor.spelling
+    res += ("::" if res else '') + self.cursor.spelling
     if self.template_arguments is not None:
       sub = [
         c.stringify_as_param() for c in self.template_arguments
@@ -185,9 +186,10 @@ class FunctionInfo(object):
       _, name = _remove_common_index(self.full_qualified_name, ns)
       func_name = f'{"::".join(name)}'
     args = [f'{arg[0].stringify(ns)} {arg[1]}' for arg in self.arguments]
-    res.append(f'{func_name}({",".join(args)})' + ' {')
-    res.append('')
-    res.append('')
+    qualifiers = []
+    if self.cursor.is_const_method():
+      qualifiers.append(' const')
+    res.append(f'{func_name}({",".join(args)})' + "".join(qualifiers) +  ' {')
     res.append('')
     res.append("}")
     return res
