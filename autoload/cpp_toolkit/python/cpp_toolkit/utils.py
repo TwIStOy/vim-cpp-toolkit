@@ -1,6 +1,9 @@
 import os.path
 from .cpp_project import *
-import vim
+try:
+  import vim
+except:
+  pass
 import sys
 import subprocess
 import os

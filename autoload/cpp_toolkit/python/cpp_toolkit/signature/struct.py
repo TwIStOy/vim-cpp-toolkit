@@ -14,15 +14,33 @@ def _remove_common_index(lst: List[str], ns: List[str]) -> (int, List[str]):
 
 
 class TypeInfo(object):
+  _reference_or_pointer_type = [
+    cindex.TypeKind.POINTER,
+    cindex.TypeKind.LVALUEREFERENCE,
+    cindex.TypeKind.RVALUEREFERENCE,
+  ]
   def __init__(self, tp: cindex.Type):
     self.tp = tp
-    self.full_qualified_name = self._full_qualified_name(tp.get_declaration())
-    self.template_arguments = None
-    if self.tp.get_num_template_arguments() > 0:
-      self.template_arguments = []
-      for i in range(self.tp.get_num_template_arguments()):
-        self.template_arguments.append(
-          TypeInfo(self.tp.get_template_argument_type(i)))
+    if self.tp.kind in self._reference_or_pointer_type:
+      # reference type
+      self.pointee = TypeInfo(self.tp.get_pointee())
+    else:
+      self.pointee = None
+      self.full_qualified_name = self._full_qualified_name(tp.get_declaration())
+      self.qualifiers = []
+      self.alias = self.tp.get_typedef_name()
+      if tp.is_const_qualified():
+        self.qualifiers.append('const')
+      if tp.is_volatile_qualified():
+        self.qualifiers.append('volatile')
+      if tp.is_restrict_qualified():
+        self.qualifiers.append('restrict')
+      self.template_arguments = None
+      if self.tp.get_num_template_arguments() > 0:
+        self.template_arguments = []
+        for i in range(self.tp.get_num_template_arguments()):
+          self.template_arguments.append(
+            TypeInfo(self.tp.get_template_argument_type(i)))
 
   @staticmethod
   def _full_qualified_name(cursor: cindex.Cursor):
@@ -40,19 +58,27 @@ class TypeInfo(object):
       return [x for x in tmp if x]
 
   def stringify(self, ns: List[str]) -> str:
-    if self.full_qualified_name:
-      # custom type
-      _, printable_name = _remove_common_index(self.full_qualified_name, ns)
-      if self.template_arguments:
-        parameters = [arg.stringify(ns) for arg in self.template_arguments]
-        tpl_parameter = f'<{", ".join(parameters)}>' \
-          if self.template_arguments else ''
-      else:
-        tpl_parameter = ''
-      return "::".join(printable_name) + tpl_parameter
+    if self.pointee:
+      if self.tp.kind == cindex.TypeKind.POINTER:
+        return self.pointee.stringify(ns) + '*'
+      if self.tp.kind == cindex.TypeKind.LVALUEREFERENCE:
+        return self.pointee.stringify(ns) + '&'
+      if self.tp.kind == cindex.TypeKind.RVALUEREFERENCE:
+        return self.pointee.stringify(ns) + '&&'
     else:
-      # builtin type
-      return self.tp.spelling
+      if self.full_qualified_name:
+        # custom type
+        _, printable_name = _remove_common_index(self.full_qualified_name, ns)
+        if self.template_arguments:
+          parameters = [arg.stringify(ns) for arg in self.template_arguments]
+          tpl_parameter = f'<{", ".join(parameters)}>' \
+            if self.template_arguments else ''
+        else:
+          tpl_parameter = ''
+        return " ".join(self.qualifiers) + ' ' + "::".join(printable_name) + tpl_parameter
+      else:
+        # builtin type
+        return self.tp.spelling
 
 
 class TemplateArgumentInfo(object):
