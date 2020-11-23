@@ -13,18 +13,10 @@ function! cpp_toolkit#corresponding_file()
 endfunction
 
 function! cpp_toolkit#mark_current_function_decl()
-  if &modified
-    echo 'Please save first!'
-  else
-    exec g:cpp_toolkit_py "cl.mark_current_function()"
-  endif
+  exec g:cpp_toolkit_py "cl.mark_current_function()"
 endfunction
 
 function! cpp_toolkit#generate_function_define_here()
-  if &modified
-    echo 'Please save first!'
-  else
-    exec g:cpp_toolkit_py "cl.generate_here()"
-  endif
+  exec g:cpp_toolkit_py "cl.generate_here()"
 endfunction
 

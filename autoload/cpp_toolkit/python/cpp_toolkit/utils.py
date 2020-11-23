@@ -118,3 +118,17 @@ def compare_iterable(lhs, rhs):
   from itertools import zip_longest, tee
   sentinel = object()
   return all(a == b for a, b in zip_longest(lhs, rhs, fillvalue=sentinel))
+
+
+def get_unsaved_buffer():
+  res = []
+  for b in vim.buffers:
+    if b.options['modified']:
+      res.append([
+        b.name,
+        '\n'.join(b)
+      ])
+  return res
+
+
+# vim:sw=2 ts=2

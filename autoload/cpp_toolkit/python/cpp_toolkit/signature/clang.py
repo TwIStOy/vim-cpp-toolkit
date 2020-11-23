@@ -29,7 +29,7 @@ class ClangIndexer(object):
   def parse_file(self, filename):
     try:
       file_args = self._get_args_from_compile_database(filename)
-      tu = self.indexer.parse(filename, file_args)
+      tu = self.indexer.parse(filename, file_args, get_unsaved_buffer())
       return tu
     except cindex.CompilationDatabaseError:
       print(f"Could not load compilation flags for {filename}")
