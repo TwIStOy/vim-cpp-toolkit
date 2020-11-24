@@ -6,6 +6,7 @@ from clang import cindex
 
 import sys
 from cpp_toolkit.signature.debug import *
+from cpp_toolkit.clang.clang_types import TypeAdapter, CursorAdapter
 
 root = '/home/s3101/agora/ddd/media_build'
 libclang = '/home/s3101/llvm/clang+llvm-11.0.0-x86_64-linux-gnu-ubuntu-16.04/lib/libclang.so'
@@ -95,7 +96,7 @@ tu = index.parse(filename, file_args)
 
 
 cursor = cindex.Cursor.from_location(tu, cindex.SourceLocation.from_position(
-    tu, cindex.File.from_name(tu, filename), 124, 11))
+    tu, cindex.File.from_name(tu, filename), 111, 16))
 
 print(cursor)
 
@@ -106,7 +107,7 @@ def print_cursor_info(cursor: cindex.Cursor):
 
 def print_param_decl(cursor: cindex.Cursor):
   assert(cursor.kind == cindex.CursorKind.PARM_DECL)
-  for c in arg.get_children():
+  for c in cursor.get_children():
     if (c.kind == cindex.CursorKind.TEMPLATE_REF or
         c.kind == cindex.CursorKind.TYPE_REF):
       print("pk,", c.kind)
@@ -114,37 +115,18 @@ def print_param_decl(cursor: cindex.Cursor):
       print("fd,", _full_qualified_name(c.type.get_declaration()))
       break
 
-  # if arg.type.kind == cindex.TypeKind.RECORD:
-  #   for c in arg.get_children():
-  #     if (c.kind == cindex.CursorKind.TEMPLATE_REF or
-  #         c.kind == cindex.CursorKind.TYPE_REF):
-  #       print(_full_qualified_name(c.type.get_declaration()))
-  #       break
-  # if arg.type.kind == cindex.TypeKind.POINTER:
-  #   for c in arg.get_children():
-  #     if (c.kind == cindex.CursorKind.TEMPLATE_REF or
-  #         c.kind == cindex.CursorKind.TYPE_REF):
-  #       print(_full_qualified_name(c.type.get_declaration()))
-  #       break
-  # if arg.type.kind == cindex.TypeKind.LVALUEREFERENCE:
-  #   for c in arg.get_children():
-  #     if (c.kind == cindex.CursorKind.TEMPLATE_REF or
-  #         c.kind == cindex.CursorKind.TYPE_REF):
-  #       print(_full_qualified_name(c.type.get_declaration()))
-  #       break
-  # if arg.type.kind == cindex.TypeKind.RVALUEREFERENCE:
-  #   for c in arg.get_children():
-  #     if (c.kind == cindex.CursorKind.TEMPLATE_REF or
-  #         c.kind == cindex.CursorKind.TYPE_REF):
-  #       print(_full_qualified_name(c.type.get_declaration()))
-  #       break
+print(cursor.kind)
+print(CursorAdapter.create(cursor).stringify(['agora', 'ddd']))
 
-for arg in cursor.get_arguments():
-  print(f'=== Start: {arg.type.spelling} ===')
-  print_cindex_type(arg.type)
-  print(f'Full qualified name: {_full_qualified_name(arg.type.get_declaration())}')
-  print(f'===  End : {arg.type.spelling} ===')
-  print('')
+# print(CursorAdapter._reg)
+# print(TypeAdapter._reg)
+# for arg in cursor.get_arguments():
+#   print(f'=== Start: {arg.type.spelling}, {arg.kind}, {arg.type.kind} ===')
+#   adapter = TypeAdapter.create(arg.type)
+#   print(adapter.stringify(['agora', 'ddd']))
+#   print_cindex_type(arg.type)
+#   print(f'===  End : {arg.type.spelling} ===')
+#   print('')
 
 # vim: ts=2 sw=2
 

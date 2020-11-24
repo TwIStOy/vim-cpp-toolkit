@@ -6,6 +6,7 @@ import os
 import sys
 from .struct import *
 from .skeleton import *
+from ..clang.clang_types import TypeAdapter, CursorAdapter
 
 logger = logging.getLogger("cpp-toolkit.clang")
 
@@ -135,12 +136,11 @@ def mark_current_function():
   cursor = node_under_cursor()
   kind: cindex.CursorKind = cursor.kind
 
-  if kind not in FunctionInfo._all_func_kinds:
+  global _current_marked_function
+  _current_marked_function = CursorAdapter.create(cursor)
+  if _current_marked_function is None:
     print('Current position is not a function decl! It\'s', kind)
     return
-
-  global _current_marked_function
-  _current_marked_function = FunctionInfo(cursor)
 
 
 def current_namespace():
@@ -162,7 +162,7 @@ def generate_here():
   if _current_marked_function is not None:
     ns = current_namespace()
     print("Generate function define in ns:", ns)
-    buf = _current_marked_function.stringify(ns)
+    buf = _current_marked_function.stringify(ns).split('\n')
     line_count = len(buf)
     cur = current_line()
     vim.current.buffer.append(buf, cur)

@@ -11,7 +11,8 @@ def print_cursor_recursive(cursor: cindex.Cursor, prefix=None):
 
 def print_cursor_up_recursive(cursor: cindex.Cursor, prefix=''):
   print(f'{prefix}type={cursor.type.spelling}, '
-        f'kind={cursor.kind.name}, spelling={cursor.spelling}')
+        f'kind={cursor.kind.name}, spelling={cursor.spelling}, '
+        f'at={cursor.location}')
   if cursor.kind != cindex.CursorKind.TRANSLATION_UNIT:
     print_cursor_up_recursive(cursor.semantic_parent, prefix + '  ')
 
@@ -24,6 +25,9 @@ def print_cindex_type(tp: cindex.Type, prefix=None):
   print(f'{prefix}Kind: {tp.kind}')
   print(f'{prefix}Canonical: {tp.get_canonical().spelling}')
   print(f'{prefix}Typedef: {tp.get_typedef_name()}')
+  print(f'{prefix}NamedType: {tp.get_named_type().kind}')
+  print(f'{prefix}Pointee: {tp.get_pointee().kind}')
+  print(f'{prefix}Ref: {tp.get_ref_qualifier()}')
   if tp.kind == cindex.TypeKind.ELABORATED:
     print(f'{prefix}=== NAMED TYPE ===')
     print_cindex_type(tp.get_named_type(), next_prefix)
