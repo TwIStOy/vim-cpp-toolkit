@@ -5,7 +5,6 @@ import clang
 from clang import cindex
 
 import sys
-from cpp_toolkit.signature.debug import *
 from cpp_toolkit.clang.clang_types import TypeAdapter, CursorAdapter
 
 root = '/home/s3101/agora/ddd/media_build'
@@ -96,7 +95,7 @@ tu = index.parse(filename, file_args)
 
 
 cursor = cindex.Cursor.from_location(tu, cindex.SourceLocation.from_position(
-    tu, cindex.File.from_name(tu, filename), 111, 16))
+    tu, cindex.File.from_name(tu, filename), 84, 16))
 
 print(cursor)
 
@@ -120,13 +119,11 @@ print(CursorAdapter.create(cursor).stringify(['agora', 'ddd']))
 
 # print(CursorAdapter._reg)
 # print(TypeAdapter._reg)
-# for arg in cursor.get_arguments():
-#   print(f'=== Start: {arg.type.spelling}, {arg.kind}, {arg.type.kind} ===')
-#   adapter = TypeAdapter.create(arg.type)
-#   print(adapter.stringify(['agora', 'ddd']))
-#   print_cindex_type(arg.type)
-#   print(f'===  End : {arg.type.spelling} ===')
-#   print('')
+for arg in cursor.get_arguments():
+  print(f'=== Start: {arg.type.spelling}, {arg.kind}, {arg.type.kind} ===')
+  print_cindex_type(arg.type)
+  print(f'===  End : {arg.type.spelling} ===')
+  print('')
 
 # vim: ts=2 sw=2
 

@@ -14,7 +14,7 @@ class Elaborated(TypeAdapter):
     def stringify(self, ns: List[str]) -> str:
         if self.tp.get_named_type().kind == cindex.TypeKind.UNEXPOSED:
             return self.tp.spelling
-        return self.named_type.stringify(ns)
+        return self.qualifiers + self.named_type.stringify(ns)
 
 
 @TypeAdapter.adapt(cindex.TypeKind.UNEXPOSED)

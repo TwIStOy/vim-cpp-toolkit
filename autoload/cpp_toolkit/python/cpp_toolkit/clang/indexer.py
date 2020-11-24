@@ -10,7 +10,7 @@ _clang_library = None
 
 
 
-def _clang_include_path(self):
+def _clang_include_path():
     assert _clang_library is not None
     p = os.path.join(_clang_library, 'lib', 'clang')
     res = []
@@ -22,26 +22,48 @@ def _clang_include_path(self):
 
 
 class ClangIndexer(object):
+    _clang_indexers = {}
+
+    @staticmethod
+    def create(root: str) -> 'ClangIndexer':
+        res = ClangIndexer._clang_indexers.get(root, None)
+        if res is not None:
+            return res
+        res = ClangIndexer(root)
+        ClangIndexer._clang_indexers[root] = res
+        return res
+
+    @staticmethod
+    def SetLibraryPath(path: str):
+        global _clang_library
+        _clang_library = path
+
     def __init__(self, root: str):
         if _clang_library is None:
             raise RuntimeError('Must setup libclang first!');
         if sys.platform == 'dawrin':
-            cindex.Config.set_library_path(
-                os.path.join(_clang_library, 'clang', 'libclang.dylib')
+            cindex.Config.set_library_file(
+                os.path.join(_clang_library, 'lib', 'libclang.dylib')
             )
         else:
-            cindex.Config.set_library_path(
-                os.path.join(_clang_library, 'clang', 'libclang.so')
+            cindex.Config.set_library_file(
+                os.path.join(_clang_library, 'lib', 'libclang.so')
             )
 
         self.cdb: cindex.CompilationDatabase = cindex.CompilationDatabase.fromDirectory(root)
         self.indexer = cindex.Index.create()
+        self._tu = {}
 
     def parse_file(self, filename: str, unsaved_buffer) -> cindex.TranslationUnit:
         try:
-            file_args = self._simplify_args_from_database(filename)
-            tu = self.indexer.parse(filename, file_args, unsaved_buffer)
-            return tu
+            tu = self._tu.get(filename, None)
+            if tu is not None:
+                tu.reparse(unsaved_buffer)
+            else:
+                file_args = self._simplify_args_from_database(filename)
+                tu = self.indexer.parse(filename, file_args, unsaved_buffer)
+                self._tu[filename] = tu
+            return self._tu[filename]
         except Exception as e:
             print(f'Cound not parse file: {e}')
             return None

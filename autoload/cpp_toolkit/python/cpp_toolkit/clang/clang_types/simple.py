@@ -50,7 +50,7 @@ class BuiltinType(TypeAdapter):
         super().__init__(tp)
 
     def stringify(self, ns: List[str]) -> str:
-        return self.tp.spelling
+        return f'{self.qualifiers}{self.tp.spelling}'
 
 
 @TypeAdapter.adapt(cindex.TypeKind.RECORD)
@@ -61,7 +61,7 @@ class Record(_CanResolveFullNamePath):
     def stringify(self, ns: List[str]) -> str:
         full_name_path = self.full_name_path
         idx = common_index(full_name_path, ns)
-        return "::".join(full_name_path[idx:])
+        return self.qualifiers + "::".join(full_name_path[idx:])
 
 
 @TypeAdapter.adapt(cindex.TypeKind.TYPEDEF)
@@ -69,4 +69,10 @@ class Typedef(Record):
     def __init__(self, tp: cindex.Type):
         super().__init__(tp)
 
+
+
+@TypeAdapter.adapt(cindex.TypeKind.ENUM)
+class Enum(Record):
+    def __init__(self, tp: cindex.Type):
+        super().__init__(tp)
 

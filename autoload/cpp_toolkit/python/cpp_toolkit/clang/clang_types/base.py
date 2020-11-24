@@ -2,6 +2,10 @@ import abc
 from typing import List
 
 from clang import cindex
+from cpp_toolkit.logger import getLogger
+
+
+logger = getLogger(__name__)
 
 
 class Printable(object):
@@ -24,6 +28,7 @@ class CursorAdapter(Printable):
     def create(cursor: cindex.Cursor):
         func = CursorAdapter._reg.get(cursor.kind, None)
         if func is None:
+            logger.warn(f'No CursorAdapter for {cursor.kind}')
             return None
         return func(cursor)
 
@@ -63,6 +68,7 @@ class TypeAdapter(Printable):
     def create(tp: cindex.Type):
         func = TypeAdapter._reg.get(tp.kind, None)
         if func is None:
+            logger.warn(f'No TypeAdapter for {tp.kind}')
             return None
         return func(tp)
 
@@ -79,7 +85,7 @@ class TypeAdapter(Printable):
 
     @property
     def qualifiers(self):
-        return ' '.join(self._qualifiers)
+        return ''.join([f'{x} ' for x in self._qualifiers])
 
 
 def common_index(name_path: List[str], ns: List[str]) -> int:

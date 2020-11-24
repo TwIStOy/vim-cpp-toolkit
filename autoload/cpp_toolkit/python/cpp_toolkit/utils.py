@@ -1,12 +1,13 @@
 import os.path
 from .cpp_project import *
-try:
-  import vim
-except:
-  pass
+import vim
 import sys
 import subprocess
 import os
+import logging
+
+def get_logger(name):
+  logger = logging.getLogger(name)
 
 
 def macos_active_toolchain():
