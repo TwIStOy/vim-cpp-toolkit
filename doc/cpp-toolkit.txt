@@ -52,6 +52,17 @@ cpp_toolkit#generate_function_define_here()
     Generate marked function's define under cursor. This function must be called
     after *cpp_toolkit#mark_current_function_decl()* has been called.
 
+                                  *cpp_toolkit#switch_file_here()*
+cpp_toolkit#switch_file_here({precmd})
+    Switch file under cursor to its corresponding file. Before new buffer
+    opened and switched, `precmd` will be executed.
+	- Split Right and switch
+	  >
+	  cpp_toolkit#switch_file_here(
+	    \ 'let curspr=&spr | set nospr | vsplit | '
+	    \  'wincmd l | if curspr | set spr | endif')
+<
+
 -------------------------------------------------------------------------------
 OPTIONS                                        *cpp-toolkit-options*
 

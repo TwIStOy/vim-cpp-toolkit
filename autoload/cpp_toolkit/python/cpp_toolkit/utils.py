@@ -4,6 +4,10 @@ import vim
 import sys
 import subprocess
 import os
+import logging
+
+def get_logger(name):
+  logger = logging.getLogger(name)
 
 
 def macos_active_toolchain():
