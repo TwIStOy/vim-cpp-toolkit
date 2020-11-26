@@ -2,7 +2,6 @@ import os
 import os.path
 from typing import List, Optional
 import subprocess
-from .utils import *
 import itertools
 
 
@@ -27,7 +26,7 @@ def project_root(p: str,
       return None
     if is_project_root(current, [marker]):
       return current
-    return _resolve_internal(os.path.split(current)[0])
+    return _resolve_internal(os.path.split(current)[0], marker)
 
   for marker in markers:
     root = _resolve_internal(p, marker)

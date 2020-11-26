@@ -8,7 +8,7 @@ exec g:cpp_toolkit_py "sys.path.insert(0, os.path.join(cwd, 'cpp_toolkit', 'pyth
 
 exec g:cpp_toolkit_py "import cpp_toolkit.signature as signature"
 
-function! s:setup_environment() abort
+function! cpp_toolkit#setup_environment() abort
   if get(s:, 'cpp_toolkit_py_setup', 0)
     return
   endif
@@ -20,19 +20,19 @@ function! s:setup_environment() abort
 endfunction
 
 function! cpp_toolkit#corresponding_file() abort
-  call s:setup_environment()
+  call cpp_toolkit#setup_environment()
 
   return call(g:cpp_toolkit_pyeval, ["switch.corresponding_file()"])
 endfunction
 
 function! cpp_toolkit#mark_current_function_decl() abort
-  call s:setup_environment()
+  call cpp_toolkit#setup_environment()
 
   exec g:cpp_toolkit_py "signature.mark_current()"
 endfunction
 
 function! cpp_toolkit#generate_function_define_here() abort
-  call s:setup_environment()
+  call cpp_toolkit#setup_environment()
 
   exec g:cpp_toolkit_py "signature.generate_here()"
 endfunction
