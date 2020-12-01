@@ -12,3 +12,5 @@ let s:extension = {
 
 call g:LfRegisterPythonExtension(s:extension.name, s:extension)
 
+command! -bar -nargs=0 CppToolkitCurrentRoot echo cpp_toolkit#project_root()
+

@@ -50,7 +50,7 @@ cpp_toolkit#mark_current_function_decl()
                                   *cpp_toolkit#generate_function_define_here()*
 cpp_toolkit#generate_function_define_here()
     Generate marked function's define under cursor. This function must be called
-    after *cpp_toolkit#mark_current_function_decl()* has been called.
+    after |cpp_toolkit#mark_current_function_decl()| has been called.
 
                                   *cpp_toolkit#switch_file_here()*
 cpp_toolkit#switch_file_here({precmd})
@@ -89,7 +89,7 @@ g:cpp_toolkit_custom_associated                *g:cpp_toolkit_custom_associated*
 g:cpp_toolkit_header_folders                   *g:cpp_toolkit_header_folders*
     List. Folder path relative with project's root to store header files. When
     finding corresponding header for a source file, we will try to replace
-    *g:cpp_toolkit_source_folders* into *g:cpp_toolkit_header_folders*.
+    |g:cpp_toolkit_source_folders| into *g:cpp_toolkit_header_folders*.
     Default value is ['include', ['..', 'include'], 'inc'].
 
 g:cpp_toolkit_source_folders                   *g:cpp_toolkit_source_folders*

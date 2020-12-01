@@ -19,6 +19,12 @@ function! cpp_toolkit#setup_environment() abort
   exec g:cpp_toolkit_py "logger.setup('DEBUG', '/tmp/cpp-toolkit.log')"
 endfunction
 
+function! cpp_toolkit#project_root() abort
+  exec g:cpp_toolkit_py "import cpp_toolkit.utils"
+
+  return call(g:cpp_toolkit_pyeval, ["cpp_toolkit.utils.current_project_root()"])
+endfunction
+
 function! cpp_toolkit#corresponding_file() abort
   call cpp_toolkit#setup_environment()
 
