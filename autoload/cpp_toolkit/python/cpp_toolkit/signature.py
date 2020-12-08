@@ -85,6 +85,9 @@ def generate_here():
     global _current_marked_function
     if _current_marked_function is not None:
         ns = _current_namespace()
+    else:
+        print('Please mark function first!')
+        return
     print("Generate function define in ns:", ns)
     if not isinstance(_current_marked_function, list):
         buf = _current_marked_function.stringify(ns).split('\n')
