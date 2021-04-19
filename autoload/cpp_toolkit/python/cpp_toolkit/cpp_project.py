@@ -28,6 +28,9 @@ def project_root(p: str,
       return current
     return _resolve_internal(os.path.split(current)[0], marker)
 
+  if len(markers) == 0:
+    markers = _default_project_marker
+
   for marker in markers:
     root = _resolve_internal(p, marker)
     if root is not None:
