@@ -64,7 +64,7 @@ def mark_current():
             if c.kind in _func_kinds
         ]
     else:
-        print('Current position is supported decl! It\'s ', kind)
+        print('Current position is not supported decl! It\'s', kind)
 
 
 def _current_namespace():
