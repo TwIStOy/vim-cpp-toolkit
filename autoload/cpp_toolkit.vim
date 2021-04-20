@@ -31,6 +31,12 @@ function! cpp_toolkit#corresponding_file() abort
   return call(g:cpp_toolkit_pyeval, ["switch.corresponding_file()"])
 endfunction
 
+function! cpp_toolkit#fast_include_header_file() abort
+  call cpp_toolkit#setup_environment()
+
+  return call(g:cpp_toolkit_pyeval, ["switch.fast_include_header_file()"])
+endfunction
+
 function! cpp_toolkit#mark_current_function_decl() abort
   call cpp_toolkit#setup_environment()
 

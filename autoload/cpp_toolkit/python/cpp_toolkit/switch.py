@@ -1,6 +1,6 @@
 import os.path
 from itertools import product
-from typing import Optional
+from typing import Optional, List
 
 from .cpp_project import project_root
 from .utils import *
@@ -36,7 +36,7 @@ def _replace_sub_directory(path, sub_directory, new_sub_directory):
   )
 
 
-def corresponding_file() -> Optional[str]:
+def corresponding_file() -> List[str]:
   import vim
   import json
   current_file = vim.eval('expand("%:p")')
@@ -90,3 +90,14 @@ def corresponding_file() -> Optional[str]:
   ]
 
   return candidates
+
+
+def fast_include_header_file() -> str:
+  current_file = vim.eval('expand("%:p")')
+  dirname, _ = os.path.split(current_file)
+  root = project_root(dirname, vim_option('cpp_toolkit_project_marker', []))
+  res = corresponding_file()
+  if len(res) == 0:
+    return '// NO HEADER FOUND!'
+  return '#include "{}"'.format(os.path.relpath(res[0], root))
+
