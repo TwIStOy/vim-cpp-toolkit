@@ -33,5 +33,5 @@ function cpp_toolkit#leaderf#manager_id()
   else
     return py3eval("id(cpp_toolkit_leaderf.headerFilesExplManager)")
   endif
-end
+endfunction
 
