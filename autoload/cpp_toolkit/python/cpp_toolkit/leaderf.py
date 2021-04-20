@@ -4,7 +4,7 @@ from leaderf.explorer import *
 from leaderf.manager import *
 from .files import filter_header_files
 from .utils import current_file
-from .logger import getLogger 
+from .logger import getLogger
 
 
 logger = getLogger(__name__)

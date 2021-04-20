@@ -27,4 +27,11 @@ anyHub.addPythonExtension(vim.eval("a:name"),
 EOF
 endfunction
 
+function cpp_toolkit#leaderf#manager_id()
+  if g:Lf_PythonVersion == 2
+    return pyeval("id(cpp_toolkit_leaderf.headerFilesExplManager)")
+  else
+    return py3eval("id(cpp_toolkit_leaderf.headerFilesExplManager)")
+  endif
+end
 

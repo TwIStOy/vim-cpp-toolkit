@@ -6,6 +6,7 @@ let s:extension = {
             \   "name": "headerFiles",
             \   "help": "navigate the cpp headers",
             \   "registerFunc": "cpp_toolkit#leaderf#register",
+            \   'manager_id': "cpp_toolkit#leaderf#manager_id",
             \   "arguments": [
             \   ]
             \ }
