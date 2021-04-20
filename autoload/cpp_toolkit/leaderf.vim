@@ -1,4 +1,12 @@
+let s:setup = get(s:, 'setup', 0)
+
 function! s:setup_leaderf()
+  if s:setup
+    return
+  endif
+
+  let s:setup = 1
+
   call leaderf#LfPy("import cpp_toolkit.leaderf as cpp_toolkit_leaderf")
 endfunc
 
@@ -28,6 +36,9 @@ EOF
 endfunction
 
 function cpp_toolkit#leaderf#manager_id()
+  call cpp_toolkit#setup_environment()
+  call s:setup_leaderf()
+
   return py3eval("id(cpp_toolkit_leaderf.headerFilesExplManager)")
 endfunction
 
