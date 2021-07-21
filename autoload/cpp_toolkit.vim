@@ -8,6 +8,25 @@ exec g:cpp_toolkit_py "sys.path.insert(0, os.path.join(cwd, 'cpp_toolkit', 'pyth
 
 exec g:cpp_toolkit_py "import cpp_toolkit.signature as signature"
 
+function! cpp_toolkit#init() abort
+  command! -bar -nargs=0 LeaderfHeaderFiles call cpp_toolkit#leaderf#start_expl()
+
+  call g:LfRegisterSelf("HeaderFiles", "navigate the cpp headers")
+
+  let s:extension = {
+              \   "name": "headerFiles",
+              \   "help": "navigate the cpp headers",
+              \   "registerFunc": "cpp_toolkit#leaderf#register",
+              \   'manager_id': "cpp_toolkit#leaderf#manager_id",
+              \   "arguments": [
+              \   ]
+              \ }
+
+  call g:LfRegisterPythonExtension(s:extension.name, s:extension)
+
+  command! -bar -nargs=0 CppToolkitCurrentRoot echo cpp_toolkit#project_root()
+end
+
 function! cpp_toolkit#setup_environment() abort
   if get(s:, 'cpp_toolkit_py_setup', 0)
     return
