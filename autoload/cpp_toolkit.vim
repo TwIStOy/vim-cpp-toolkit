@@ -25,7 +25,7 @@ function! cpp_toolkit#init() abort
   call g:LfRegisterPythonExtension(s:extension.name, s:extension)
 
   command! -bar -nargs=0 CppToolkitCurrentRoot echo cpp_toolkit#project_root()
-end
+endfunction
 
 function! cpp_toolkit#setup_environment() abort
   if get(s:, 'cpp_toolkit_py_setup', 0)
