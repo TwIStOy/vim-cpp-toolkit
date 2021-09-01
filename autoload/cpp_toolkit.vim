@@ -84,7 +84,8 @@ function! cpp_toolkit#switch_file_here(precmd) abort
     while bufnum != -1
       let filename = fnamemodify(bufname(bufnum), ':p')
       if filename == newpath
-        execute ':sbuffer ' . filename
+        execute ':buffer ' . filename
+        break
       endif
       let i += 1
       let bufnum = winbufnr(i)
